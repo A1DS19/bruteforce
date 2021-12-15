@@ -1,6 +1,7 @@
 import argparse
 from bs4 import BeautifulSoup
 from termcolor import colored
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -47,7 +48,15 @@ def crack(password, usernameInput, passwordInput, loginButton):
     passwordInput.send_keys(password)
     loginButton.click()
 
-    WebDriverWait(browser, 50)
+    time.sleep(5)
+
+    content = BeautifulSoup(browser.page_source, 'lxml')
+
+    if content.text in possible_failed_attempts_keywords:
+        run_browser()
+    else:
+        print(f'[+] Correct password is {password}')
+        exit()
 
 
 try:
